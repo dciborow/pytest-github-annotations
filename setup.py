@@ -6,14 +6,14 @@ with open("./README.md") as f:
     long_description = f.read()
 
 setup(
-    name="pytest-github-actions-annotate-failures",
+    name="pytest-github-annotations",
     version="0.1.6",
-    description="pytest plugin to annotate failed tests with a workflow command for GitHub Actions",
+    description="forked pytest plugin to annotate failed tests with a workflow command for GitHub Actions",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="utgwkk",
-    author_email="utagawakiki@gmail.com",
-    url="https://github.com/utgwkk/pytest-github-actions-annotate-failures",
+    author_email="dciborow@microsoft.com",
+    url="https://github.com/dciborow/pytest-github-annotations",
     license="MIT",
     classifiers=["Framework :: Pytest",],
     packages=find_packages(),
