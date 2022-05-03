@@ -31,13 +31,10 @@ def pytest_runtest_makereport(item, call):
         # collect information to be annotated
         filesystempath, lineno, _ = report.location
 
-        runpath = os.environ.get("PYTEST_RUN_PATH")
-        if runpath:
+        if runpath := os.environ.get("PYTEST_RUN_PATH"):
             filesystempath = os.path.join(runpath, filesystempath)
 
-        # try to convert to absolute path in GitHub Actions
-        workspace = os.environ.get("GITHUB_WORKSPACE")
-        if workspace:
+        if workspace := os.environ.get("GITHUB_WORKSPACE"):
             full_path = os.path.abspath(filesystempath)
             try:
                 rel_path = os.path.relpath(full_path, workspace)
@@ -76,13 +73,12 @@ def _error_workflow_command(filesystempath, lineno, longrepr):
     if lineno is not None:
         details_dict["line"] = lineno
 
-    details = ",".join("{}={}".format(k, v) for k, v in details_dict.items())
+    details = ",".join(f"{k}={v}" for k, v in details_dict.items())
 
     if longrepr is None:
         return "\n::error {}".format(details)
-    else:
-        longrepr = _escape(longrepr)
-        return "\n::error {}::{}".format(details, longrepr)
+    longrepr = _escape(longrepr)
+    return "\n::error {}::{}".format(details, longrepr)
 
 
 def _escape(s):

@@ -13,7 +13,7 @@ pytest_plugins = "pytester"
 # https://docs.pytest.org/en/stable/changelog.html#pytest-5-3-0-2019-11-19
 def no_fnmatch_line(result, pattern):
     if version.parse(pytest.__version__) >= version.parse("5.3.0"):
-        result.stderr.no_fnmatch_line(pattern + "*",)
+        result.stderr.no_fnmatch_line(f"{pattern}*")
     else:
         assert pattern not in result.stderr.str()
 
