@@ -29,7 +29,7 @@ def pytest_runtest_makereport(item, call):
 
     if report.when == "call" and report.failed:
         # collect information to be annotated
-        filesystempath, lineno, _ = report.location
+        filesystempath, line_num, _ = report.location
 
         runpath = os.environ.get("PYTEST_RUN_PATH")
         if runpath:
@@ -49,40 +49,39 @@ def pytest_runtest_makereport(item, call):
             if not rel_path.startswith(".."):
                 filesystempath = rel_path
 
-        if lineno is not None:
+        if line_num is not None:
             # 0-index to 1-index
-            lineno += 1
+            line_num += 1
 
         # get the name of the current failed test, with parametrize info
-        longrepr = report.head_line or item.name
+        long_repr = report.head_line or item.name
 
         # get the error message and line number from the actual error
         try:
-            longrepr += "\n\n" + report.longrepr.reprcrash.message
-            lineno = report.longrepr.reprcrash.lineno
+            long_repr += "\n\n" + report.longrepr.reprcrash.message
+            line_num = report.longrepr.reprcrash.line_num
 
         except AttributeError:
             pass
 
         print(
-            _error_workflow_command(filesystempath, lineno, longrepr), file=sys.stderr
+            _error_workflow_command(filesystempath, line_num, long_repr), file=sys.stderr
         )
 
 
-def _error_workflow_command(filesystempath, lineno, longrepr):
+def _error_workflow_command(filesystempath, line_num, long_repr):
     # Build collection of arguments. Ordering is strict for easy testing
     details_dict = OrderedDict()
     details_dict["file"] = filesystempath
-    if lineno is not None:
-        details_dict["line"] = lineno
+    if line_num is not None:
+        details_dict["line"] = line_num
 
     details = ",".join("{}={}".format(k, v) for k, v in details_dict.items())
 
-    if longrepr is None:
+    if long_repr is None:
         return "\n::error {}".format(details)
-    else:
-        longrepr = _escape(longrepr)
-        return "\n::error {}::{}".format(details, longrepr)
+    long_repr = _escape(long_repr)
+    return "\n::error {}::{}".format(details, long_repr)
 
 
 def _escape(s):
