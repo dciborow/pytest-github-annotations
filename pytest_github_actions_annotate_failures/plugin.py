@@ -68,7 +68,6 @@ def pytest_runtest_makereport(item, call):
             _error_workflow_command(filesystempath, line_num, long_repr), file=sys.stderr
         )
 
-
 def _error_workflow_command(filesystempath, line_num, long_repr):
     # Build collection of arguments. Ordering is strict for easy testing
     details_dict = OrderedDict()
